@@ -22,12 +22,21 @@ fun main(args: Array<String>) {
 
 @RestController
 class Controllo(
-    private val client: Client
+    private val reactorClient: ReactorClient,
+    private val coroutinesClient: CoroutinesClient
 ) {
-    @GetMapping("/hello")
+    @GetMapping("/coroutines/hello")
     suspend fun hello(): String {
         println("starting")
-        val withDelay = client.getWithDelay().awaitSingle()
+        val withDelay = coroutinesClient.getWithDelay()
+        println("finishing")
+        return withDelay
+    }
+
+    @GetMapping("/reactor/hello")
+    suspend fun helloReactor(): String {
+        println("starting")
+        val withDelay = reactorClient.getWithDelay().awaitSingle()
         println("finishing")
         return withDelay
     }
@@ -44,11 +53,19 @@ class Configuration {
     )
 
     @Bean
-    fun client(proxy: HttpServiceProxyFactory): Client = proxy.createClient(Client::class.java)
+    fun coroutinesClient(proxy: HttpServiceProxyFactory): CoroutinesClient =
+        proxy.createClient(CoroutinesClient::class.java)
+
+    @Bean
+    fun reactorClient(proxy: HttpServiceProxyFactory): ReactorClient = proxy.createClient(ReactorClient::class.java)
 }
 
-interface Client {
+interface CoroutinesClient {
+    @GetExchange("/delay/5")
+    suspend fun getWithDelay(): String
+}
+
+interface ReactorClient {
     @GetExchange("/delay/5")
     fun getWithDelay(): Mono<String>
 }
-

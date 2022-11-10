@@ -23,18 +23,18 @@ configurations {
 repositories {
     mavenCentral()
     maven { url = uri("https://repo.spring.io/milestone") }
-    maven {
-        name = "personal-packages"
-        url = uri("https://maven.pkg.github.com/$owner/packages")
-        credentials {
-            username = System.getenv("GITHUB_USERNAME") ?: owner
-            password = System.getenv("GITHUB_PACKAGES_TOKEN") ?: System.getenv("GITHUB_TOKEN") ?: error("Token not found")
-        }
-    }
+//    maven {
+//        name = "personal-packages"
+//        url = uri("https://maven.pkg.github.com/$owner/packages")
+//        credentials {
+//            username = System.getenv("GITHUB_USERNAME") ?: owner
+//            password = System.getenv("GITHUB_PACKAGES_TOKEN") ?: System.getenv("GITHUB_TOKEN") ?: error("Token not found")
+//        }
+//    }
 }
 
 dependencies {
-    implementation("com.xunfos:self-versioning-kt-lib:1.0.1")
+//    implementation("com.xunfos:self-versioning-kt-lib:1.0.1")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
