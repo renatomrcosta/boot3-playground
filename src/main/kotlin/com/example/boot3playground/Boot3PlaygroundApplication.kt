@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.annotation.GetExchange
 import org.springframework.web.service.invoker.HttpServiceProxyFactory
+import org.springframework.web.service.invoker.createClient
 import reactor.core.publisher.Mono
 
 @SpringBootApplication
@@ -23,7 +24,7 @@ fun main(args: Array<String>) {
 @RestController
 class Controllo(
     private val reactorClient: ReactorClient,
-    private val coroutinesClient: CoroutinesClient
+    private val coroutinesClient: CoroutinesClient,
 ) {
     @GetMapping("/coroutines/hello")
     suspend fun hello(): String {
@@ -48,16 +49,15 @@ class Configuration {
     fun httpBinWebClient(): WebClient = WebClient.builder().baseUrl("https://httpbin.org/").build()
 
     @Bean
-    fun proxy(httpBinWebClient: WebClient): HttpServiceProxyFactory = WebClientAdapter.createHttpServiceProxyFactory(
-        httpBinWebClient
-    )
+    fun proxy(httpBinWebClient: WebClient): HttpServiceProxyFactory = HttpServiceProxyFactory.builder(
+        WebClientAdapter.forClient(httpBinWebClient),
+    ).build()
 
     @Bean
-    fun coroutinesClient(proxy: HttpServiceProxyFactory): CoroutinesClient =
-        proxy.createClient(CoroutinesClient::class.java)
+    fun coroutinesClient(proxy: HttpServiceProxyFactory): CoroutinesClient = proxy.createClient()
 
     @Bean
-    fun reactorClient(proxy: HttpServiceProxyFactory): ReactorClient = proxy.createClient(ReactorClient::class.java)
+    fun reactorClient(proxy: HttpServiceProxyFactory): ReactorClient = proxy.createClient()
 }
 
 interface CoroutinesClient {

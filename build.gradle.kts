@@ -2,11 +2,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
-    id("org.springframework.boot") version "3.0.0-RC1"
+    id("org.graalvm.buildtools.native") version "0.9.17"
+
+    id("org.springframework.boot") version "3.0.3-SNAPSHOT"
     id("io.spring.dependency-management") version "1.1.0"
-    id("org.graalvm.buildtools.native") version "0.9.16"
-    kotlin("jvm") version "1.7.20"
-    kotlin("plugin.spring") version "1.7.20"
+    kotlin("jvm") version "1.7.22"
+    kotlin("plugin.spring") version "1.7.22"
 }
 
 val owner = "renatomrcosta"
@@ -23,6 +24,7 @@ configurations {
 repositories {
     mavenCentral()
     maven { url = uri("https://repo.spring.io/milestone") }
+    maven { url = uri("https://repo.spring.io/snapshot") }
 //    maven {
 //        name = "personal-packages"
 //        url = uri("https://maven.pkg.github.com/$owner/packages")
